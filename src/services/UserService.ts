@@ -76,7 +76,7 @@ class UserService implements CRUD<User | string> {
   }
   async get(requestedUser: LoginUserDto): Promise<User | null> {
     const userContext = await this.dbContext.findOne({username:requestedUser.username});
-    if(userContext && bcrypt.compareSync(requestedUser.password, userContext.password))
+    if(userContext && await bcrypt.compare(requestedUser.password, userContext.password))
       return userContext as User;
     else
       return null;
