@@ -85,7 +85,7 @@ class MeasureController {
   async listAmount(@Response() res, @Request() req, @Params('id') id:string)
   {
     const limit:number = req.body;
-    const temp = await this.measureService.listDay(id,limit);
+    const temp = await this.measureService.listAmount(id,limit);
     if (temp) {
       res.send(temp).status(200);
     } else {
