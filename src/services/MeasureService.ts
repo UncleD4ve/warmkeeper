@@ -67,7 +67,7 @@ class MeasureService implements CRUD<Measure|string>
         }
         return measureContext as Measure;
     }
-    async listDay(id:string,limit:number) : Promise<Array<Measure>>
+    async listAmount(id:string,limit:number) : Promise<Array<Measure>>
     {
         const measureContext = await this.dbContext.find({furnaceId : id}).sort({_id:-1}).limit(limit)
         return measureContext as Array<Measure>
