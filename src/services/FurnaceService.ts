@@ -37,7 +37,7 @@ class FurnaceService implements CRUD<Furnace | string>
     async deleteById(id: string): Promise<string | null> {
         const furnaceContext = await this.dbContext.findById(id);
         if (!furnaceContext) return null;
-        //await furnaceContext.deleteOne({id:id});
+        await furnaceContext.deleteOne();
         return `Furnace ${furnaceContext.name} has been removed.`
     }
     async patchById(id:string, resource: PutFurnaceDto) : Promise<Furnace|null>

@@ -14,7 +14,7 @@ import { HttpException } from "../exceptions";
 import { AuthMiddleware } from "../middlewares";
 import { UserService } from "../services";
 
-@Controller("/user",[AuthMiddleware]) 
+@Controller("/user") 
 class UserController {
   private userService: UserService;
   constructor() {
@@ -22,7 +22,7 @@ class UserController {
   }
 
   
-  @Get("/")
+  @Get("/",[AuthMiddleware])
   async getList(@Response() res) {
     const temp = await this.userService.list();
     if (temp) {
@@ -41,7 +41,7 @@ class UserController {
       throw new HttpException(500, "Internal error");
     }
   }
-  @Put('/:id') //>>
+  @Put('/:id',[AuthMiddleware]) //>>
   async putById(@Response() res,@Request() req, @Params('id') id:string)
   {
     const changePerson = req.body as PutUserDto;
@@ -52,7 +52,7 @@ class UserController {
       throw new HttpException(500, "Internal error");
     }
   }
-  @Get("/:id")
+  @Get("/:id",[AuthMiddleware])
   async getById(@Response() res, @Params("id") id: string) {
     const temp = await this.userService.readById(id);
     if (temp) {
@@ -61,7 +61,7 @@ class UserController {
       throw new HttpException(500, "Internal error");
     }
   }
-  @Delete('/:id')
+  @Delete('/:id',[AuthMiddleware])
   async deleteById(@Response() res, @Params('id') id:string )
   {
       const temp = await this.userService.deleteById(id);
@@ -71,7 +71,7 @@ class UserController {
         throw new HttpException(500, "Internal error");
       }
   }
-  @Patch('/:id')
+  @Patch('/:id',[AuthMiddleware])
   async patchById(@Response() res,@Request() req, @Params('id') id:string)
   {
     const changePerson = req.body as PutUserDto;

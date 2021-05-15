@@ -81,5 +81,16 @@ class MeasureController {
       throw new HttpException(500, "Internal error");
     }
   }
+  @Get('/id',[AuthMiddleware])
+  async listDay(@Response() res, @Request() req, @Params('id') id:string)
+  {
+    const limit:number = req.body;
+    const temp = await this.measureService.listDay(id,limit);
+    if (temp) {
+      res.send(temp).status(200);
+    } else {
+      throw new HttpException(500, "Internal error");
+    }
+  }
 }
 export default MeasureController;

@@ -45,7 +45,7 @@ class UserService implements CRUD<User | string> {
   async deleteById(id: string): Promise<string | null> {
     const userContext = await this.dbContext.findById(id);
     if (!userContext) return null;
-    //await userContext.deleteOne({id:id});
+    await userContext.deleteOne();
     return `User has been removed. \n Given mail: ${userContext.email} \n Given username: ${userContext.username}`;
   }
   async patchById(id: string, resource: PutUserDto): Promise<User | null> {

@@ -37,7 +37,7 @@ class MeasureService implements CRUD<Measure|string>
     async deleteById(id: string): Promise<string | null> {
         const measureContext = await this.dbContext.findById(id);
         if (!measureContext) return null;
-        //await measureContext.deleteOne({id:id});
+        await measureContext.deleteOne();
         return `Measure has been removed.`
     }
     async patchById(id:string,resource:PutMeasureDto) : Promise<Measure>
@@ -66,6 +66,11 @@ class MeasureService implements CRUD<Measure|string>
             measureContext.save();
         }
         return measureContext as Measure;
+    }
+    async listDay(id:string,limit:number) : Promise<Array<Measure>>
+    {
+        const measureContext = await this.dbContext.find({furnaceId : id}).sort({_id:-1}).limit(limit)
+        return measureContext as Array<Measure>
     }
 }
 export default MeasureService;

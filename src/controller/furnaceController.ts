@@ -12,8 +12,9 @@ import {
 import { CreateFurnaceDto, PutFurnaceDto } from "../dto";
 import { HttpException } from "../exceptions";
 import { FurnaceService } from "../services"; 
+import {AuthMiddleware} from '../middlewares'
 
-@Controller("/furnace")
+@Controller("/furnace",[AuthMiddleware])
 class FurnaceController {
   private furnaceService : FurnaceService;
   constructor() {
