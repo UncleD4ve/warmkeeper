@@ -4,7 +4,7 @@ import * as bodyParser from "body-parser";
 import { FurnaceController, LoginController, UserController , MeasureController} from "./controller";
 import * as path from "path";
 
-dotenv.config({ path: path.join(__dirname, "../env/.env" )});
+dotenv.config({ path: path.join(__dirname, "/.env" )});
 process.on("uncaughtException", (reason, p) => {
   console.error(reason);
 });
@@ -29,6 +29,4 @@ const server = new Startup()
   .withBodyParser(bodyParser.urlencoded({ extended: true }))
   .attachRouter('/api',[UserController,LoginController,FurnaceController,MeasureController])
   .listening()
-  .buildReact('../../Frontend/build')
-  .testCall()
-  .testPost();
+  .buildReact('../../Frontend/build');

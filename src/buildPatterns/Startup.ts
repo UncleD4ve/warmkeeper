@@ -2,10 +2,8 @@ import { attachControllers, Controller } from "@decorators/express";
 import * as cors from "cors";
 import * as express from "express";
 import * as mongoose from "mongoose";
-import { LoginUserDto } from "../dto/LoginUser.dto";
 import { HttpException } from "../exceptions";
 import { errorMiddleware, loggerMiddleware } from "../middlewares";
-import UserService from "../services/UserService";
 import * as path from "path";
 class Startup {
   public startup: express.Application;
@@ -45,25 +43,6 @@ class Startup {
     this.startup.use(errorMiddleware);
     return this;
   }
-  testCall(): Startup {
-    // this.startup.get("/", (req, res) => {
-    //   res.send({ greeting: "Server running. Hello cruel world." });
-    // });
-    this.startup.get("/", async (req, res) => {
-      let x = await new UserService().get({
-        username: "user",
-        password: "pwd",
-      } as LoginUserDto);
-      res.send(x);
-    });
-    return this;
-  }
-  testPost(): Startup {
-    this.startup.post("/test", (req, res) => {
-      res.send({ timestamp: Date.now() });
-    });
-    return this;
-  }
   setMongoOptions(options: Object): Startup {
     this.options = options;
     return this;
@@ -71,9 +50,7 @@ class Startup {
   connectMongo(): Startup {
     if (process.env.NODE_ENV !== "production") {
       this.mongoose.set("debug", true);
-    }
-    console.log(this.url);
-    
+    }    
     this.mongoose
       .connect(process.env.MONGODB_URI || this.url, this.options)
       .then(() => {
