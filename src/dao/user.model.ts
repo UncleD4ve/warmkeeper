@@ -6,9 +6,10 @@ const userSchema: Schema = new Schema({
   email: { type: String },
   fullname: { type: String },
   password: { type: String },
+},{
+  timestamps:true
 });
 userSchema.set("toJSON", {
-  timestamps:true,
   virtuals: true,
   versionKey: false,
   transform: function (doc, ret) 

@@ -5,9 +5,10 @@ const furnaceSchema: Schema = new Schema({
   userId : {type:String},
   name : {type:String},
   typ : {type:String}
+},{
+  timestamps:true
 });
 furnaceSchema.set("toJSON", {
-  timestamps:true,
   virtuals: true,
   versionKey: false,
   transform: function (doc, ret) 

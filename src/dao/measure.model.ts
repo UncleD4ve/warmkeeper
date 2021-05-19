@@ -6,9 +6,10 @@ const measureSchema: Schema = new Schema({
   fuelLevel : {type:Number},
   temperature : {type:Number},
   powerSupply : {type:Boolean}
+},{
+  timestamps:true
 });
 measureSchema.set("toJSON", {
-  timestamps:true,
   virtuals: true,
   versionKey: false,
   transform: function (doc, ret) 
