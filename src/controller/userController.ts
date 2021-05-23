@@ -34,13 +34,14 @@ class UserController {
   @Post("/create")
   async postCreate(@Response() res, @Request() req) {
     const newPerson = req.body as CreateUserDto;
+    console.log(newPerson)
     if(
-      Object.keys(newPerson).length == 1 ||
-      newPerson.email == "" ||
-      newPerson.fullName == "" ||
-      newPerson.password == "" || 
-      newPerson.username == "" 
-    ) throw new HttpException(406,"Provided data not match the model")
+      Object.keys(newPerson).length == 0 ||
+      (newPerson.email == "" || newPerson.email == null || newPerson.email == undefined) ||
+      (newPerson.fullName == "" || newPerson.fullName == null || newPerson.fullName == undefined) ||
+      (newPerson.password == "" || newPerson.password == null || newPerson.password == undefined) || 
+      (newPerson.username == "" || newPerson.username == null || newPerson.username == undefined) 
+    ) throw new HttpException(409,"Provided data not match the model")
     const temp = await this.userService.create(newPerson);
     if (temp) {
       res.send(temp).status(201);

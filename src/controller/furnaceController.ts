@@ -35,9 +35,9 @@ class FurnaceController {
     const newFurnace = req.body as CreateFurnaceDto;
     if(
       Object.keys(newFurnace).length == 1 || 
-      newFurnace.userId == "" ||
-      newFurnace.name == "" ||
-      newFurnace.typ == ""
+      (newFurnace.name == "" || newFurnace.name == null || newFurnace.name == undefined) ||
+    (newFurnace.typ == "" || newFurnace.typ == null || newFurnace.typ == undefined) ||
+    (newFurnace.userId == "" || newFurnace.userId == null || newFurnace.userId == undefined)  
     ) throw new HttpException(406,"Unsupported data")
     const temp = await this.furnaceService.create(newFurnace);
     if (temp) {
