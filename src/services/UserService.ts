@@ -13,6 +13,7 @@ class UserService implements CRUD<User | string> {
     return userContext as Array<User>;
   }
   async create(resource: CreateUserDto): Promise<User | null> {
+    console.log("service",resource);
     if (!resource) throw new HttpException(400, "Given resources is empty");
     const found =
       (await this.dbContext.findOne({ username: resource.username })) ||
@@ -21,7 +22,7 @@ class UserService implements CRUD<User | string> {
     const hash = await bcrypt.hash(resource.password, 10);
     const createdUser = await this.dbContext.create({
       ...resource,
-      password: hash,
+      password: hash
     });
     return createdUser as User;
   }

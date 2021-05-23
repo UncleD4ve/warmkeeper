@@ -34,7 +34,7 @@ class UserController {
   @Post("/create")
   async postCreate(@Response() res, @Request() req) {
     const newPerson = req.body as CreateUserDto;
-    console.log(newPerson)
+    console.log("Controller",newPerson)
     if(
       Object.keys(newPerson).length == 0 ||
       (newPerson.email == "" || newPerson.email == null || newPerson.email == undefined) ||
