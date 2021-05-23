@@ -43,11 +43,13 @@ class LoginController {
     const foundUser = await this.userService.get(loginDto);
     if (!foundUser) throw new HttpException(404, "Not found");
     const furnaceDto = {userId:foundUser.id,name:req.body.name,typ:req.body.typ} as CreateFurnaceDto;
+    const getFurnace = await this.furnaceService.get(furnaceDto);
     if(
       Object.keys(furnaceDto).length == 1 ||
       furnaceDto.name == "" ||
       furnaceDto.typ == ""
     ) throw new HttpException(406,"Unsupported data")
+    else if (getFurnace) throw new HttpException(409,"Furnace has been found")
     else await this.furnaceService.create(furnaceDto);
     const token = this.authService.createToken(foundUser);
     if (!token)

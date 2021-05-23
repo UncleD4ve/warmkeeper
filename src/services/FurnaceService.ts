@@ -62,5 +62,11 @@ class FurnaceService implements CRUD<Furnace | string>
         }
         return furnaceContext as Furnace;
     }
+    async get(requestedFurnace:CreateFurnaceDto) : Promise<Furnace|null>
+    {
+        const furnaceContext = await this.dbContext.find({userId:requestedFurnace.userId,name:requestedFurnace.name});
+        if (furnaceContext.length != 1) return null;
+        return furnaceContext[0] as Furnace;
+    }
 }
 export default FurnaceService;
