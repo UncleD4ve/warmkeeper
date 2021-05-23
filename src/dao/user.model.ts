@@ -4,8 +4,8 @@ import { User } from "../types/models";
 const userSchema: Schema = new Schema({
   username: { type: String },
   email: { type: String },
-  fullname: { type: String },
-  password: { type: String },
+  fullName: { type: String },
+  password: { type: String }
 },{
   timestamps:true
 });

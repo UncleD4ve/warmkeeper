@@ -13,17 +13,23 @@ class UserService implements CRUD<User | string> {
     return userContext as Array<User>;
   }
   async create(resource: CreateUserDto): Promise<User | null> {
-    console.log("service",resource);
+
     if (!resource) throw new HttpException(400, "Given resources is empty");
     const found =
       (await this.dbContext.findOne({ username: resource.username })) ||
       (await this.dbContext.findOne({ email: resource.email }));
     if (found) throw new HttpException(406, "Username or email is already taken");
     const hash = await bcrypt.hash(resource.password, 10);
+    // const createdUser = await this.dbContext.create({
+    //   ...resource,
+    //   password: hash
+    // });
     const createdUser = await this.dbContext.create({
-      ...resource,
-      password: hash
-    });
+      fullName:"Jaca Praca",
+      username:"user12512521",
+      email:"temp12124154@mail.com",
+      password:hash
+    })
     return createdUser as User;
   }
   async putById(id: string, resource: PutUserDto): Promise<User | null> {
