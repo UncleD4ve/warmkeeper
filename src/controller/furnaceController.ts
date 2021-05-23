@@ -33,6 +33,12 @@ class FurnaceController {
   @Post("/create")
   async postCreate(@Response() res, @Request() req) {
     const newFurnace = req.body as CreateFurnaceDto;
+    if(
+      Object.keys(newFurnace).length == 1 || 
+      newFurnace.userId == "" ||
+      newFurnace.name == "" ||
+      newFurnace.typ == ""
+    ) throw new HttpException(406,"Unsupported data")
     const temp = await this.furnaceService.create(newFurnace);
     if (temp) {
       res.send(temp).status(201);
