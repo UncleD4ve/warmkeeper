@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Request, Response } from "@decorators/express";
-import { CreateFurnaceDto, LoginUserDto } from "../dto";
+import { CreateFurnaceDto, LoggedUserDto, LoginUserDto } from "../dto";
 import { HttpException } from "../exceptions";
 import { FurnaceService, UserService } from "../services";
 import {AuthService} from "../services";
@@ -29,7 +29,8 @@ class LoginController {
     const token = this.authService.createToken(foundUser);
     if (!token)
       throw new HttpException(500, "Internal error, unable to create token");
-    res.send(token).status(200);
+    const id = foundUser.id
+    res.send({token,id} as LoggedUserDto).status(200);
   }
   @Post("/esp")
   async loginESP(@Response() res, @Request() req) {

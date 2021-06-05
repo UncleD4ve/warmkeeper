@@ -1,26 +1,35 @@
 import {
-    Controller,
-    Delete,
-    Get,
-    Params,
-    Patch,
-    Post,
-    Put,
-    Request,
-    Response,
-  } from "@decorators/express";
+  Controller,
+  Delete,
+  Get,
+  Params,
+  Patch,
+  Post,
+  Put,
+  Request,
+  Response,
+} from "@decorators/express";
 import { CreateFurnaceDto, PutFurnaceDto } from "../dto";
 import { HttpException } from "../exceptions";
-import { FurnaceService } from "../services"; 
-import {AuthMiddleware} from '../middlewares'
+import { FurnaceService } from "../services";
+import { AuthMiddleware } from "../middlewares";
 
-@Controller("/furnace",[AuthMiddleware])
+@Controller("/furnace", [AuthMiddleware])
 class FurnaceController {
-  private furnaceService : FurnaceService;
+  private furnaceService: FurnaceService;
   constructor() {
     this.furnaceService = new FurnaceService();
   }
-
+  @Get("/byUser")
+  async getUserList(@Response() res, @Request() req) {
+    const id = req.body.id;
+    const furnaces = await this.furnaceService.listByUser(id);
+    if (furnaces) {
+      res.send(furnaces).status(200);
+    } else {
+      throw new HttpException(500, "Internal error");
+    }
+  }
   @Get("/")
   async getList(@Response() res) {
     const temp = await this.furnaceService.list();
@@ -33,12 +42,19 @@ class FurnaceController {
   @Post("/create")
   async postCreate(@Response() res, @Request() req) {
     const newFurnace = req.body as CreateFurnaceDto;
-    if(
-      Object.keys(newFurnace).length == 1 || 
-      (newFurnace.name == "" || newFurnace.name == null || newFurnace.name == undefined) ||
-      (newFurnace.typ == "" || newFurnace.typ == null || newFurnace.typ == undefined) ||
-      (newFurnace.userId == "" || newFurnace.userId == null || newFurnace.userId == undefined)  
-    ) throw new HttpException(406,"Unsupported data")
+    if (
+      Object.keys(newFurnace).length == 1 ||
+      newFurnace.name == "" ||
+      newFurnace.name == null ||
+      newFurnace.name == undefined ||
+      newFurnace.typ == "" ||
+      newFurnace.typ == null ||
+      newFurnace.typ == undefined ||
+      newFurnace.userId == "" ||
+      newFurnace.userId == null ||
+      newFurnace.userId == undefined
+    )
+      throw new HttpException(406, "Unsupported data");
     const temp = await this.furnaceService.create(newFurnace);
     if (temp) {
       res.send(temp).status(201);
@@ -46,11 +62,10 @@ class FurnaceController {
       throw new HttpException(500, "Internal error");
     }
   }
-  @Put('/:id') //>>
-  async putById(@Response() res,@Request() req, @Params('id') id:string)
-  {
+  @Put("/:id") //>>
+  async putById(@Response() res, @Request() req, @Params("id") id: string) {
     const changeFurnace = req.body as PutFurnaceDto;
-    const temp = await this.furnaceService.putById(id,changeFurnace);
+    const temp = await this.furnaceService.putById(id, changeFurnace);
     if (temp) {
       res.send(temp).status(200);
     } else {
@@ -66,21 +81,19 @@ class FurnaceController {
       throw new HttpException(500, "Internal error");
     }
   }
-  @Delete('/:id')
-  async deleteById(@Response() res, @Params('id') id:string )
-  {
-      const temp = await this.furnaceService.deleteById(id);
-      if (temp) {
-        res.send(temp).status(200);
-      } else {
-        throw new HttpException(500, "Internal error");
-      }
+  @Delete("/:id")
+  async deleteById(@Response() res, @Params("id") id: string) {
+    const temp = await this.furnaceService.deleteById(id);
+    if (temp) {
+      res.send(temp).status(200);
+    } else {
+      throw new HttpException(500, "Internal error");
+    }
   }
-  @Patch('/:id')
-  async patchById(@Response() res,@Request() req, @Params('id') id:string)
-  {
+  @Patch("/:id")
+  async patchById(@Response() res, @Request() req, @Params("id") id: string) {
     const changeFurnace = req.body as PutFurnaceDto;
-    const temp = await this.furnaceService.patchById(id,changeFurnace);
+    const temp = await this.furnaceService.patchById(id, changeFurnace);
     if (temp) {
       res.send(temp).status(200);
     } else {
