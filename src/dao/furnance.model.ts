@@ -16,6 +16,6 @@ furnaceSchema.set("toJSON", {
     delete ret._id;
   }
 });
-const furnaceModel = model<Furnace & Document>("Furnace", furnaceSchema, "furnace");
+const furnaceModel = model<Furnace & Document>("furnace", furnaceSchema, "furnace");
 
 export default furnaceModel;

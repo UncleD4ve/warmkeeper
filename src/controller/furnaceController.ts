@@ -20,10 +20,9 @@ class FurnaceController {
   constructor() {
     this.furnaceService = new FurnaceService();
   }
-  @Get("/byUser")
-  async getUserList(@Response() res, @Request() req) {
-    const id = req.body.id;
-    const furnaces = await this.furnaceService.listByUser(id);
+  @Get("/:userId")
+  async getUserList(@Response() res, @Params('userId') userId:string) {
+    const furnaces = await this.furnaceService.listByUser(userId);
     if (furnaces) {
       res.send(furnaces).status(200);
     } else {

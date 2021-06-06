@@ -2,7 +2,7 @@ interface Furnace {
     id : string
     userId : string
     name : string
-    typ : number
+    typ : string
     createdAt : Date
     updatedAt : Date
 }

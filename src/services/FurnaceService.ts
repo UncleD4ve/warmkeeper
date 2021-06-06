@@ -1,9 +1,14 @@
 import { MeasureService } from ".";
 import { furnaceModel } from "../dao";
-import { CreateFurnaceDto, PutFurnaceDto, SensorDto } from "../dto";
+import {
+  CreateFurnaceDto,
+  PutFurnaceDto,
+  SensorDataDto,
+  SensorDto
+} from "../dto";
 import { HttpException } from "../exceptions";
 import { CRUD } from "../types/interfaces/crud.interface";
-import { Furnace } from "../types/models";
+import { Furnace, Measure } from "../types/models";
 export interface FurnanceVM {
   id: string;
   name: string;
@@ -14,23 +19,6 @@ class FurnaceService implements CRUD<Furnace | string> {
   private measureService: MeasureService;
   constructor() {
     this.measureService = new MeasureService();
-  }
-  async listByUser(id: string): Promise<Array<FurnanceVM>> {
-    const furnaceContext = (await this.dbContext.find({
-      userId: id,
-    })) as Array<Furnace>;
-    const furnances: Array<FurnanceVM> = [];
-
-    furnaceContext.filter(async (furnance) => {
-      const sensors = await this.measureService.listAmount(furnance.id, 50);
-      const newFurnance: FurnanceVM = {
-        id: furnance.id,
-        name: furnance.name,
-        sensors,
-      };
-      furnances.push(newFurnance)
-    });
-    return furnances as Array<FurnanceVM>;
   }
   async list(): Promise<Array<Furnace>> {
     const furnaceContext = await this.dbContext.find();
@@ -75,10 +63,10 @@ class FurnaceService implements CRUD<Furnace | string> {
       Object.assign(furnaceContext, { userId: resource.userId });
       await furnaceContext.save();
     }
-    if (furnaceContext.typ != resource.typ && resource.typ != null) {
-      Object.assign(furnaceContext, { typ: resource.typ });
-      await furnaceContext.save();
-    }
+    // if (furnaceContext.typ != resource.typ && resource.typ != null) {
+    //   Object.assign(furnaceContext, { typ: resource.typ });
+    //   await furnaceContext.save();
+    // }
     return furnaceContext as Furnace;
   }
   async get(requestedFurnace: CreateFurnaceDto): Promise<Furnace | null> {
@@ -89,5 +77,115 @@ class FurnaceService implements CRUD<Furnace | string> {
     if (furnaceContext.length != 1) return null;
     return furnaceContext[0] as Furnace;
   }
+  async listByUser(userId:string) : Promise<Array<FurnanceVM>>
+  {
+    const furnaceContext = await this.dbContext.find({ userId: userId });
+    const furnaceObjects = await furnaceContext.map((el) =>
+      el.toObject()
+    ) as Array<Furnace>;
+    const furnaceArray : Array<FurnanceVM> = [];
+    await furnaceObjects.map(furnace => {
+      const sensorArray = this.measureService.myList(furnace.typ,50)
+      furnaceArray.push({
+        id:furnace.id,
+        name:furnace.name,
+        sensors: sensorArray
+      })
+    })
+    return null;
+  }
 }
 export default FurnaceService;
+
+/*
+async listByUser(userId: string) {
+    const furnaceContext = await this.dbContext.find({ userId: userId });
+    const foundFurnances = furnaceContext.map((el) =>
+      el.toObject()
+    ) as Array<Furnace>;
+    const getData = async () =>
+      Promise.all(
+        foundFurnances.map((f) => this.measureService.listAmount(f.typ, 50))
+      );
+    let foundMeasure = [];
+    const measure = await (
+      await getData()
+    ).map((el) => {
+      foundMeasure.push(el);
+    });
+
+    const furnances: Array<FurnanceVM> = [];
+    foundMeasure.forEach((me: Array<Measure>) => {
+      let id = furnances.length - 1;
+      furnances[id].id = me[0].id;
+      furnances[id].name = me[0].id;
+      furnances[id].sensors = [
+        { name: "fuelLevel", status: "0", img: "x", data: [] },
+        { name: "temperature", status: "0", img: "x", data: [] },
+        { name: "powerSupply", status: "0", img: "x", data: [] },
+      ];
+      me.map((measure: Measure) => {
+        furnances[id].sensors[
+          furnances[id].sensors.findIndex((s) => s.name == "fuelLevel")
+        ].data.push({
+          date: new Intl.DateTimeFormat("en-US", {
+            hour: "numeric",
+            minute: "numeric",
+          }).format(measure.createdAt),
+          value: measure.fuelLevel,
+        } as SensorDataDto);
+      });
+    });
+    
+ 
+    let sensors: Array<SensorDto> = [
+      { name: "fuelLevel", status: "0", img: "x", data: [] },
+      { name: "temperature", status: "0", img: "x", data: [] },
+      { name: "powerSupply", status: "0", img: "x", data: [] },
+    ];
+    foundMeasure.forEach((measure: Measure) => {
+      furnances.push({
+        name: measure.furnaceId,
+        id: measure.id,
+        sensors,
+      } as FurnanceVM);
+    });
+    foundMeasure.forEach((measure: Measure) => {
+      sensors[sensors.findIndex((s) => s.name == "fuelLevel")].data.push({
+        date: new Intl.DateTimeFormat("en-US", {
+          hour: "numeric",
+          minute: "numeric",
+        }).format(measure.createdAt),
+        value: measure.fuelLevel,
+      } as SensorDataDto);
+      sensors[sensors.findIndex((s) => s.name == "temperature")].data.push({
+        date: new Intl.DateTimeFormat("en-US", {
+          hour: "numeric",
+          minute: "numeric",
+        }).format(measure.createdAt),
+        value: measure.temperature,
+      } as SensorDataDto);
+      sensors[sensors.findIndex((s) => s.name == "powerSupply")].data.push({
+        date: new Intl.DateTimeFormat("en-US", {
+          hour: "numeric",
+          minute: "numeric",
+        }).format(measure.createdAt),
+        value: Number(measure.powerSupply),
+      } as SensorDataDto);
+      furnances.push({
+        name: measure.furnaceId,
+        sensors,
+        id: measure.furnaceId,
+      } as FurnanceVM);
+      sensors = [
+        { name: "fuelLevel", status: "0", img: "x", data: [] },
+        { name: "temperature", status: "0", img: "x", data: [] },
+        { name: "powerSupply", status: "0", img: "x", data: [] },
+      ];
+    });
+    let names: string[] = furnances.map((el) => el.name);
+    names = names.filter((v, i) => names.indexOf(v) === i);
+
+return furnances;
+}
+*/

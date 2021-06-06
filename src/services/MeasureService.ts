@@ -62,18 +62,105 @@ class MeasureService implements CRUD<Measure | string> {
     }
     return measureContext as Measure;
   }
-  async listAmount(id: string, limit: number) {
-    const measureContext = await this.dbContext
-      .find({ furnaceId: id })
-      .sort({ _id: -1 })
-      .limit(limit);
+  async myList(typ:string,limit:number):Promise<Array<SensorDto>>
+  {
+    const measureContext = await this.dbContext.find({furnaceId:typ}).limit(limit);
+    const measureObjects = await measureContext.map(el=>el.toObject());
+    const sensors: Array<SensorDto> = [
+      { name: "fuelLevel", status: "0", img: "x", data: [] },
+      { name: "temperature", status: "0", img: "x", data: [] },
+      { name: "powerSupply", status: "0", img: "x", data: [] },
+    ];
+    await sensors.map(sensor => {
+      measureObjects.map(measure=>{
+        if(sensor.name === "fuelLevel")
+        {
+          let temp = new Intl.DateTimeFormat("en-Us",{
+            hour:"numeric",
+            minute:"numeric"
+          }).format(measure.createdAt);
+          sensor.data.push({
+            date:temp,
+            value:measure[sensor.name]
+          })
+        }
+        if(sensor.name === "temperature")
+        {
+          let temp = new Intl.DateTimeFormat("en-Us",{
+            hour:"numeric",
+            minute:"numeric"
+          }).format(measure.createdAt);
+          sensor.data.push({
+            date:temp,
+            value:measure[sensor.name]
+          })
+        }
+        if(sensor.name === "powerSupply")
+        {
+          let temp = new Intl.DateTimeFormat("en-Us",{
+            hour:"numeric",
+            minute:"numeric"
+          }).format(measure.createdAt);
+          sensor.data.push({
+            date:temp,
+            value:Number(measure[sensor.name])
+          })
+        }
+      })
+    })
+    return sensors as Array<SensorDto>;
+  }
+}
+export default MeasureService;
+
+/*
+
+if(singleType == measureObjects[singleType])
+      {
+        const newSensor : SensorDto =
+        {
+          name : singleType,
+          status : "0",
+          img : "x",
+          data : []
+        };
+        measureObjects.map((measure) => {
+          if(singleType === measure[singleType])
+          {
+            const temp =new Intl.DateTimeFormat("en-Us",{
+              hour:"numeric",
+              minute:"numeric"
+            }).format(measure.createdAt);
+            newSensor.data.push({
+              date:temp,
+              value:measure[singleType]
+            })
+          }
+        })
+        sensors.push(newSensor);
+      }
+    })
+
+*/
+
+
+/*
+listAmount(typ: string, limit: number) {
+    const measureContext =  this.dbContext.find({ furnaceId: typ });
+    console.log(measureContext);
+    return measureContext;
+  }
+*/
+
+/*
+ const foundMeasure = await measureContext.map((el) => el.toObject());
     const sensors: Array<SensorDto> = [
       { name: "fuelLevel", status: "0", img: "x", data: [] },
       { name: "temperature", status: "0", img: "x", data: [] },
       { name: "powerSupply", status: "0", img: "x", data: [] },
     ];
 
-    measureContext.forEach((measure: Measure) => {
+    foundMeasure.forEach((measure: Measure) => {
       sensors[sensors.findIndex((s) => s.name == "fuelLevel")].data.push({
         date: new Intl.DateTimeFormat("en-US", {
           hour: "numeric",
@@ -95,9 +182,4 @@ class MeasureService implements CRUD<Measure | string> {
         }).format(measure.createdAt),
         value: Number(measure.powerSupply),
       } as SensorDataDto);
-    });
-
-    return sensors;
-  }
-}
-export default MeasureService;
+    });*/
