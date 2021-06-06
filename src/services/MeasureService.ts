@@ -90,7 +90,7 @@ class MeasureService implements CRUD<Measure | string> {
           sensor.status = (100-Math.round((measure[sensor.name]-0)*(100-0)/(200-0)+0)).toString()+'%';
           sensor.data.push({
             date: temp,
-            value: Math.round((measure[sensor.name]-0)*(100-0)/(200-0)+0),
+            value: (100-Math.round((measure[sensor.name]-0)*(100-0)/(200-0)+0)),
           });
         }
         if (sensor.name === "temperature") {
