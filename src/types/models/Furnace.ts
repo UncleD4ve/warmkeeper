@@ -1,4 +1,4 @@
-interface Furnace {
+export interface Furnace {
     id : string
     userId : string
     name : string
@@ -6,4 +6,3 @@ interface Furnace {
     createdAt : Date
     updatedAt : Date
 }
-export default Furnace;

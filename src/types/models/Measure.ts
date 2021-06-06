@@ -1,4 +1,4 @@
-interface Measure{
+export interface Measure{
     id : string
     furnaceId : string
     fuelLevel : number
@@ -7,4 +7,3 @@ interface Measure{
     createdAt : Date
     updatedAt : Date
 }
-export default Measure;

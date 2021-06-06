@@ -1,4 +1,5 @@
+import {User} from '../types/models'
 export interface LoggedUserDto {
     token: string;
-    id: string;
+    user: User;
 }

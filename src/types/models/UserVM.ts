@@ -1,7 +1,6 @@
 import {User} from './'
-interface UserVM {
+export interface UserVM {
     token : string 
     hubId : string
     user : User
 }
-export default UserVM;
