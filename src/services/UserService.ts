@@ -35,8 +35,8 @@ class UserService implements CRUD<User | string> {
     if (!(await bcrypt.compare(resource.password, userContext.password)) && resource.password !== "" 
     && resource.password !== null && resource.password !== undefined )
     {
-      if(!this.validator.test(resource.password)) 
-      {throw new HttpException(400, "Password need to contain at least 8 characters with 1 uppercase,lowercase,digit and special characters")}
+      if(!(this.validator.test(resource.password))) 
+      throw new HttpException(400, "Password need to contain at least 8 characters with 1 uppercase,lowercase,digit and special characters")
       hash = await bcrypt.hash(resource.password, 10);
     }
     hash = hash || userContext.password;
