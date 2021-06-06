@@ -110,7 +110,7 @@ class MeasureService implements CRUD<Measure | string> {
             hour: "numeric",
             minute: "numeric",
           }).format(measure.createdAt);
-          sensor.status = Number(measure[sensor.name]).toString();
+          measure[sensor.name] ? sensor.status = "ON" : sensor.status = "OFF"
           sensor.data.push({
             date: temp,
             value: Number(measure[sensor.name]),
