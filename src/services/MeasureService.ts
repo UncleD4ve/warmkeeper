@@ -87,10 +87,10 @@ class MeasureService implements CRUD<Measure | string> {
             minute: "numeric",
             timeZone: 'Poland'
           }).format(measure.createdAt);
-          sensor.status = (100-Math.round((measure[sensor.name]-0)*(100-0)/(200-0)+0)).toString()+'%';
+          sensor.status = (100-convertToRange(measure[sensor.name],[0,200],[0,100])).toString()+'%';
           sensor.data.push({
             date: temp,
-            value: (100-Math.round((measure[sensor.name]-0)*(100-0)/(200-0)+0)),
+            value: (100-convertToRange(measure[sensor.name],[0,200],[0,100])),
           });
         }
         if (sensor.name === "temperature") {
@@ -123,9 +123,18 @@ class MeasureService implements CRUD<Measure | string> {
       });
     });
     return { id: typ, name, sensors } as FurnanceVM;
+
+    function convertToRange(value, srcRange, dstRange){
+      if (value < srcRange[0]) return dstRange[0]; 
+      if (value > srcRange[1]) return dstRange[1]; 
+      return Math.round((value - srcRange[0] * dstRange[1] - dstRange[0] / srcRange[1] - srcRange[0]) + dstRange[0]);
+    }
+
   }
 }
 export default MeasureService;
+
+
 
 /*
 
