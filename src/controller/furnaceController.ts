@@ -20,15 +20,6 @@ class FurnaceController {
   constructor() {
     this.furnaceService = new FurnaceService();
   }
-  @Get("/:userId")
-  async getUserList(@Response() res, @Params('userId') userId:string) {
-    const furnaces = await this.furnaceService.listByUser(userId);
-    if (furnaces) {
-      res.send(furnaces).status(200);
-    } else {
-      throw new HttpException(500, "Internal error");
-    }
-  }
   @Get("/")
   async getList(@Response() res) {
     const temp = await this.furnaceService.list();
@@ -95,6 +86,15 @@ class FurnaceController {
     const temp = await this.furnaceService.patchById(id, changeFurnace);
     if (temp) {
       res.send(temp).status(200);
+    } else {
+      throw new HttpException(500, "Internal error");
+    }
+  }
+  @Get("/w/:userId")
+  async getUserList(@Response() res, @Params('userId') userId:string) {
+    const furnaces = await this.furnaceService.listByUser(userId);
+    if (furnaces) {
+      res.send(furnaces).status(200);
     } else {
       throw new HttpException(500, "Internal error");
     }

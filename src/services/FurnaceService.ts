@@ -1,11 +1,7 @@
+import { O_DIRECT } from "node:constants";
 import { MeasureService } from ".";
 import { furnaceModel } from "../dao";
-import {
-  CreateFurnaceDto,
-  PutFurnaceDto,
-  SensorDataDto,
-  SensorDto
-} from "../dto";
+import { CreateFurnaceDto, PutFurnaceDto, SensorDto } from "../dto";
 import { HttpException } from "../exceptions";
 import { CRUD } from "../types/interfaces/crud.interface";
 import { Furnace, Measure } from "../types/models";
@@ -77,22 +73,26 @@ class FurnaceService implements CRUD<Furnace | string> {
     if (furnaceContext.length != 1) return null;
     return furnaceContext[0] as Furnace;
   }
-  async listByUser(userId:string) : Promise<Array<FurnanceVM>>
-  {
+  async listByUser(userId: string): Promise<Array<FurnanceVM>> {
     const furnaceContext = await this.dbContext.find({ userId: userId });
-    const furnaceObjects = await furnaceContext.map((el) =>
-      el.toObject()
-    ) as Array<Furnace>;
-    const furnaceArray : Array<FurnanceVM> = [];
-    await furnaceObjects.map(furnace => {
-      const sensorArray = this.measureService.myList(furnace.typ,50)
-      furnaceArray.push({
-        id:furnace.id,
-        name:furnace.name,
-        sensors: sensorArray
-      })
-    })
-    return null;
+    const furnaceObjects = (await furnaceContext.map((el) =>
+      el.toJSON()
+    )) as Array<Furnace>;
+    const furnaceArray = [];
+    furnaceObjects.map(async (furnace) => {
+      furnaceArray.push(this.measureService.myList(furnace.typ, 50,furnace.name));
+      // sensorArray = await this.measureService.myList(furnace.typ, 50);
+    
+      /*
+     furnaceArray.push({
+        id: furnace.id,
+        name: furnace.name,
+        sensors: await sensorArray,
+      });
+      */
+    });
+    const data = await Promise.all(furnaceArray)
+    return data;
   }
 }
 export default FurnaceService;

@@ -51,15 +51,15 @@ class MeasureController {
       throw new HttpException(500, "Internal error");
     }
   }
-  // @Get("/:id",[AuthMiddleware])
-  // async getById(@Response() res, @Params("id") id: string) {
-  //   const temp = await this.measureService.readById(id);
-  //   if (temp) {
-  //     res.send(temp).status(200);
-  //   } else {
-  //     throw new HttpException(500, "Internal error");
-  //   }
-  // }
+  @Get("/:id",[AuthMiddleware])
+  async getById(@Response() res, @Params("id") id: string) {
+    const temp = await this.measureService.readById(id);
+    if (temp) {
+      res.send(temp).status(200);
+    } else {
+      throw new HttpException(500, "Internal error");
+    }
+  }
   @Delete('/:id',[AuthMiddleware])
   async deleteById(@Response() res, @Params('id') id:string )
   {
@@ -81,7 +81,7 @@ class MeasureController {
       throw new HttpException(500, "Internal error");
     }
   }
-  @Get('/:typ')
+  @Get('/w/:typ')
   async list(@Response() res,@Params('typ') typ:string, @Request() req )
   {
     const limit = req.body.limit
