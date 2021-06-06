@@ -88,7 +88,6 @@ class MeasureService implements CRUD<Measure | string> {
             timeZone: 'Poland'
           }).format(measure.createdAt);
           sensor.status = (100-convertToRange(measure[sensor.name],[10,100],[0,100])).toString()+'%';
-          //sensor.status = measure[sensor.name].toString();
           sensor.data.push({
             date: temp,
             value: (100-convertToRange(measure[sensor.name],[10,100],[0,100])),
