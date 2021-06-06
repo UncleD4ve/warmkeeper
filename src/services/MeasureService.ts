@@ -66,7 +66,7 @@ class MeasureService implements CRUD<Measure | string> {
   async myList(typ: string, limit: number, name: string) {
     const measureContext = await this.dbContext
       .find({ furnaceId: typ })
-      .sort({createdAt:-1})
+      .sort({createdAt:1})
       .limit(limit);
     const measureObjects = (await measureContext.map((el) =>
       el.toJSON()

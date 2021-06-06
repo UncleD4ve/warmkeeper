@@ -5,6 +5,7 @@ import * as bcrypt from "bcrypt";
 import { CreateUserDto, LoginUserDto, PutUserDto } from "../dto";
 import { HttpException } from "../exceptions";
 class UserService implements CRUD<User | string> {
+  private validator : RegExp = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})")
   private dbContext = userModel;
   constructor() {}
 
@@ -31,7 +32,12 @@ class UserService implements CRUD<User | string> {
     delete resource.token;
     if (!resource) throw new HttpException(400, "Given resources are empty");
     if (!userContext) return null;
-    const hash = await bcrypt.hash(resource.password, 10);
+    let hash;
+    if (!this.validator.test(resource.password)) throw new HttpException(400, "Password is not strong enough")
+    if (userContext.password != resource.password && resource.password)
+    {
+      hash = await bcrypt.hash(resource.password, 10);
+    }
     Object.assign(userContext, {...resource,
       password: hash,
     });
@@ -68,7 +74,8 @@ class UserService implements CRUD<User | string> {
         Object.assign(userContext, {fullname: resource.fullname });
       await userContext.save();
     }
-    if (userContext.password != resource.password && resource.password != null) {
+    if (userContext.password != resource.password && resource.password) {
+      if (!this.validator.test(resource.password)) throw new HttpException(400, "Password is not strong enough")
       const hash = await bcrypt.hash(resource.password, 10);
       Object.assign(userContext, {password: hash });
       await userContext.save();
