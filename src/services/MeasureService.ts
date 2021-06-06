@@ -88,6 +88,7 @@ class MeasureService implements CRUD<Measure | string> {
             timeZone: 'Poland'
           }).format(measure.createdAt);
           sensor.status = (100-convertToRange(measure[sensor.name],[0,200],[0,100])).toString()+'%';
+          //sensor.status = measure[sensor.name].toString();
           sensor.data.push({
             date: temp,
             value: (100-convertToRange(measure[sensor.name],[0,200],[0,100])),
@@ -127,7 +128,7 @@ class MeasureService implements CRUD<Measure | string> {
     function convertToRange(value, srcRange, dstRange){
       if (value < srcRange[0]) return dstRange[0]; 
       if (value > srcRange[1]) return dstRange[1]; 
-      return Math.round((value - srcRange[0] * dstRange[1] - dstRange[0] / srcRange[1] - srcRange[0]) + dstRange[0]);
+      return Math.round(((value - srcRange[0]) * (dstRange[1] - dstRange[0]) / (srcRange[1] - srcRange[0])) + dstRange[0]);
     }
 
   }
