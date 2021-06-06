@@ -63,15 +63,15 @@ class UserController {
       changePerson.password == "" 
     )
       throw new HttpException(422, "Unprocessable entity");
-    const loginDto: LoginUserDto = {username:changePerson.username,password:changePerson.password};
-    const foundUser = await this.userService.get(loginDto);
-    if (!foundUser) throw new HttpException(404, "Not found");
+    // const loginDto: LoginUserDto = {username:changePerson.username,password:changePerson.password};
+    // const foundUser = await this.userService.get(loginDto);
+    // if (!foundUser) throw new HttpException(404, "Not found");
     const temp = await this.userService.putById(id,changePerson);
     const token = this.authService.createToken(temp);
     if (!token)
       throw new HttpException(500, "Internal error, unable to create token");
     if (temp) {
-      res.send({token,user:foundUser} as LoggedUserDto).status(200);
+      res.send({token,user:temp} as LoggedUserDto).status(200);
     } else {
       throw new HttpException(500, "Internal error");
     }

@@ -32,10 +32,10 @@ class UserService implements CRUD<User | string> {
     if (!resource) throw new HttpException(400, "Given resources are empty");
     if (!userContext) return null;
     let hash;
-    if (!this.validator.test(resource.password)) 
-      throw new HttpException(400, "Password need to contain at least 8 characters with 1 uppercase,lowercase,digit and special characters")
-    if (userContext.password != resource.password && resource.password)
+    if (await bcrypt.compare(resource.password, userContext.password) && resource.password)
     {
+      if (!this.validator.test(resource.password)) 
+      throw new HttpException(400, "Password need to contain at least 8 characters with 1 uppercase,lowercase,digit and special characters")
       hash = await bcrypt.hash(resource.password, 10);
     }
     Object.assign(userContext, {...resource,
