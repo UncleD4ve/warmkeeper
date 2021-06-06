@@ -85,6 +85,7 @@ class MeasureService implements CRUD<Measure | string> {
           let temp = new Intl.DateTimeFormat("pl", {
             hour: "numeric",
             minute: "numeric",
+            timeZone: 'UTC'
           }).format(measure.createdAt);
           sensor.status = Math.round((measure[sensor.name]-0)*(100-0)/(200-0)+0).toString()+'%';
           sensor.data.push({
@@ -97,6 +98,7 @@ class MeasureService implements CRUD<Measure | string> {
           let temp = new Intl.DateTimeFormat("pl", {
             hour: "numeric",
             minute: "numeric",
+            timeZone: 'UTC'
           }).format(measure.createdAt);
           sensor.status = measure[sensor.name].toString().substring(0,5)+"°C";
           sensor.data.push({
@@ -109,6 +111,7 @@ class MeasureService implements CRUD<Measure | string> {
           let temp = new Intl.DateTimeFormat("pl", {
             hour: "numeric",
             minute: "numeric",
+            timeZone: 'UTC'
           }).format(measure.createdAt);
           measure[sensor.name] ? sensor.status = "ON" : sensor.status = "OFF"
           sensor.data.push({
