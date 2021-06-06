@@ -86,10 +86,10 @@ class MeasureService implements CRUD<Measure | string> {
             hour: "numeric",
             minute: "numeric",
           }).format(measure.createdAt);
-          sensor.status = measure[sensor.name].toString();
+          sensor.status = Math.round((measure[sensor.name]-0)*(100-0)/(200-0)+0).toString()+'%';
           sensor.data.push({
             date: temp,
-            value: measure[sensor.name],
+            value: Math.round((measure[sensor.name]-0)*(100-0)/(200-0)+0),
           });
         }
         if (sensor.name === "temperature") {
@@ -98,7 +98,7 @@ class MeasureService implements CRUD<Measure | string> {
             hour: "numeric",
             minute: "numeric",
           }).format(measure.createdAt);
-          sensor.status = measure[sensor.name].toString();
+          sensor.status = measure[sensor.name].toString().substring(0,5)+"°C";
           sensor.data.push({
             date: temp,
             value: measure[sensor.name],
