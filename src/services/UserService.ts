@@ -39,6 +39,7 @@ class UserService implements CRUD<User | string> {
       throw new HttpException(400, "Password need to contain at least 8 characters with 1 uppercase,lowercase,digit and special characters")
       hash = await bcrypt.hash(resource.password, 10);
     }
+    hash = hash || userContext.password;
     Object.assign(userContext, {...resource,
       id: userContext.id,
       password: hash
