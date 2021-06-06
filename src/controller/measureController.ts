@@ -81,13 +81,13 @@ class MeasureController {
       throw new HttpException(500, "Internal error");
     }
   }
-  @Get('/w/:typ')
-  async list(@Response() res,@Params('typ') typ:string, @Request() req )
-  {
-    const limit = req.body.limit
-    const temp = await this.measureService.myList(typ,limit);
-    res.send(temp).status(200);
-  }
+  // @Get('/w/:typ')
+  // async list(@Response() res,@Params('typ') typ:string, @Request() req )
+  // {
+  //   const limit = req.body.limit
+  //   const temp = await this.measureService.myList(typ,limit);
+  //   res.send(temp).status(200);
+  // }
 
 }
 export default MeasureController;
