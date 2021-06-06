@@ -79,7 +79,7 @@ class MeasureService implements CRUD<Measure | string> {
     await sensors.map((sensor) => {
       measureObjects.map((measure) => {
         if (sensor.name === "fuelLevel") {
-          let temp = new Intl.DateTimeFormat("en-Us", {
+          let temp = new Intl.DateTimeFormat("pl", {
             hour: "numeric",
             minute: "numeric",
           }).format(measure.createdAt);
@@ -91,7 +91,7 @@ class MeasureService implements CRUD<Measure | string> {
         }
         if (sensor.name === "temperature") {
 
-          let temp = new Intl.DateTimeFormat("en-Us", {
+          let temp = new Intl.DateTimeFormat("pl", {
             hour: "numeric",
             minute: "numeric",
           }).format(measure.createdAt);
@@ -103,7 +103,7 @@ class MeasureService implements CRUD<Measure | string> {
         }
         if (sensor.name === "powerSupply") {
 
-          let temp = new Intl.DateTimeFormat("en-Us", {
+          let temp = new Intl.DateTimeFormat("pl", {
             hour: "numeric",
             minute: "numeric",
           }).format(measure.createdAt);
