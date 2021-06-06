@@ -76,7 +76,7 @@ class FurnaceService implements CRUD<Furnace | string> {
     )) as Array<Furnace>;
     const furnaceArray = [];
     furnaceObjects.map(async (furnace) => {
-      furnaceArray.push(this.measureService.myList(furnace.typ, 50,furnace.name));
+      furnaceArray.push(this.measureService.myList(furnace.typ, 160,furnace.name));
       // sensorArray = await this.measureService.myList(furnace.typ, 50);
     
       /*
