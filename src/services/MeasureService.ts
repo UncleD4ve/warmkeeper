@@ -87,11 +87,11 @@ class MeasureService implements CRUD<Measure | string> {
             minute: "numeric",
             timeZone: 'Poland'
           }).format(measure.createdAt);
-          sensor.status = (100-convertToRange(measure[sensor.name],[0,200],[0,100])).toString()+'%';
+          sensor.status = (100-convertToRange(measure[sensor.name],[10,100],[0,100])).toString()+'%';
           //sensor.status = measure[sensor.name].toString();
           sensor.data.push({
             date: temp,
-            value: (100-convertToRange(measure[sensor.name],[0,200],[0,100])),
+            value: (100-convertToRange(measure[sensor.name],[10,100],[0,100])),
           });
         }
         if (sensor.name === "temperature") {
