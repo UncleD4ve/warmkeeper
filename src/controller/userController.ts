@@ -9,16 +9,18 @@ import {
   Request,
   Response,
 } from "@decorators/express";
-import { CreateUserDto, PutUserDto } from "../dto";
+import { CreateUserDto, LoggedUserDto, LoginUserDto, PutUserDto } from "../dto";
 import { HttpException } from "../exceptions";
 import { AuthMiddleware } from "../middlewares";
-import { UserService } from "../services";
+import { AuthService, UserService } from "../services";
 
 @Controller("/user") 
 class UserController {
   private userService: UserService;
+  private authService: AuthService
   constructor() {
     this.userService = new UserService();
+    this.authService = new AuthService();
   }
 
   
@@ -53,9 +55,23 @@ class UserController {
   async putById(@Response() res,@Request() req, @Params('id') id:string)
   {
     const changePerson = req.body as PutUserDto;
+    if (
+      Object.keys(changePerson).length == 0 ||
+      changePerson.email == "" ||
+      changePerson.password == "" ||
+      changePerson.fullname == "" ||
+      changePerson.password == "" 
+    )
+      throw new HttpException(422, "Unprocessable entity");
+    const loginDto: LoginUserDto = {username:changePerson.username,password:changePerson.password};
+    const foundUser = await this.userService.get(loginDto);
+    if (!foundUser) throw new HttpException(404, "Not found");
     const temp = await this.userService.putById(id,changePerson);
+    const token = this.authService.createToken(temp);
+    if (!token)
+      throw new HttpException(500, "Internal error, unable to create token");
     if (temp) {
-      res.send(temp).status(200);
+      res.send({token,user:foundUser} as LoggedUserDto).status(200);
     } else {
       throw new HttpException(500, "Internal error");
     }

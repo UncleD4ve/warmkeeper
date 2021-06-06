@@ -29,7 +29,6 @@ class UserService implements CRUD<User | string> {
   }
   async putById(id: string, resource: PutUserDto): Promise<User | null> {
     const userContext = await this.dbContext.findById(id);
-    delete resource.token;
     if (!resource) throw new HttpException(400, "Given resources are empty");
     if (!userContext) return null;
     let hash;
@@ -40,7 +39,8 @@ class UserService implements CRUD<User | string> {
       hash = await bcrypt.hash(resource.password, 10);
     }
     Object.assign(userContext, {...resource,
-      password: hash,
+      id: userContext.id,
+      password: hash
     });
     await userContext.save();
     return userContext as User;
@@ -58,7 +58,6 @@ class UserService implements CRUD<User | string> {
   }
   async patchById(id: string, resource: PutUserDto): Promise<User | null> {
     const userContext = await this.dbContext.findById(id);
-    delete resource.token;
     if (!userContext) return null;
     if (userContext.username != resource.username && resource.username != null)
       {
