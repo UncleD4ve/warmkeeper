@@ -72,9 +72,9 @@ class MeasureService implements CRUD<Measure | string> {
       el.toJSON()
     )) as Array<Measure>;
     const sensors: Array<SensorDto> = [
-      { name: "fuelLevel", status: "0", img: "x", data: [] },
-      { name: "temperature", status: "0", img: "x", data: [] },
-      { name: "powerSupply", status: "0", img: "x", data: [] },
+      { name: "fuelLevel", status: "0", img: "https://image.flaticon.com/icons/png/512/3381/3381652.png", data: [] },
+      { name: "temperature", status: "0", img: "https://image.flaticon.com/icons/png/512/808/808602.png", data: [] },
+      { name: "powerSupply", status: "0", img: "https://image.flaticon.com/icons/png/512/1594/1594037.png", data: [] },
     ];
     await sensors.map((sensor) => {
       measureObjects.map((measure) => {
