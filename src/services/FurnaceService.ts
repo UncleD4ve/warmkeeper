@@ -59,10 +59,6 @@ class FurnaceService implements CRUD<Furnace | string> {
       Object.assign(furnaceContext, { userId: resource.userId });
       await furnaceContext.save();
     }
-    // if (furnaceContext.typ != resource.typ && resource.typ != null) {
-    //   Object.assign(furnaceContext, { typ: resource.typ });
-    //   await furnaceContext.save();
-    // }
     return furnaceContext as Furnace;
   }
   async get(requestedFurnace: CreateFurnaceDto): Promise<Furnace | null> {
