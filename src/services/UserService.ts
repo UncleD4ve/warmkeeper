@@ -31,8 +31,9 @@ class UserService implements CRUD<User | string> {
     const userContext = await this.dbContext.findById(id);
     if (!resource) throw new HttpException(400, "Given resources are empty");
     if (!userContext) return null;
-    let hash;
-    if (!(await bcrypt.compare(resource.password, userContext.password)) && resource.password)
+    let hash = "";
+    if (!(await bcrypt.compare(resource.password, userContext.password)) && resource.password !== "" 
+    && resource.password !== null && resource.password !== undefined )
     {
       if(!this.validator.test(resource.password)) 
       throw new HttpException(400, "Password need to contain at least 8 characters with 1 uppercase,lowercase,digit and special characters")
