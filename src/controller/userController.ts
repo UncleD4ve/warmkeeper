@@ -57,13 +57,12 @@ class UserController {
     const changePerson = req.body as PutUserDto;
     if (
       Object.keys(changePerson).length == 0 ||
-      changePerson.email == "" ||
-      changePerson.username == "" ||
-      changePerson.fullname == "" 
+      (changePerson.email == "" || changePerson.email == null || changePerson.email == undefined) ||
+      (changePerson.fullname == "" || changePerson.fullname == null || changePerson.fullname == undefined) || 
+      (changePerson.username == "" || changePerson.username == null || changePerson.username == undefined) 
     )
       throw new HttpException(422, "Unprocessable entity");
-    const loginDto: LoginUserDto = {username:changePerson.username,password:changePerson.password};
-    const foundUser = await this.userService.get(loginDto);
+    const foundUser = await this.userService.readById(id);
     if (!foundUser) throw new HttpException(404, "Not found");
     const temp = await this.userService.putById(id,changePerson);
     const token = this.authService.createToken(temp);
