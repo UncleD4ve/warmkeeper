@@ -66,11 +66,14 @@ class MeasureService implements CRUD<Measure | string> {
   async myList(typ: string, limit: number, name: string) {
     const measureContext = await this.dbContext
       .find({ furnaceId: typ })
-      .sort({ _id: -1 })
-      .limit(limit);
+      .sort({ _id: -1 }) //desc
+      .limit(limit); 
     const measureObjects = (await measureContext.map((el) =>
       el.toJSON()
     )) as Array<Measure>;
+    measureObjects.sort((a,b)=>{
+      return +a.createdAt - +b.createdAt;
+    })
     const sensors: Array<SensorDto> = [
       { name: "fuelLevel", status: "0", img: "https://image.flaticon.com/icons/png/512/3381/3381652.png", data: [] },
       { name: "temperature", status: "0", img: "https://image.flaticon.com/icons/png/512/808/808602.png", data: [] },
