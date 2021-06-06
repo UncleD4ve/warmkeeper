@@ -66,7 +66,7 @@ class MeasureService implements CRUD<Measure | string> {
   async myList(typ: string, limit: number, name: string) {
     const measureContext = await this.dbContext
       .find({ furnaceId: typ })
-      .sort({createdAt:1})
+      .sort({ createdAt: 1 })
       .limit(limit);
     const measureObjects = (await measureContext.map((el) =>
       el.toJSON()
@@ -83,34 +83,40 @@ class MeasureService implements CRUD<Measure | string> {
             hour: "numeric",
             minute: "numeric",
           }).format(measure.createdAt);
+          sensor.status = measure[sensor.name].toString();
           sensor.data.push({
             date: temp,
             value: measure[sensor.name],
           });
         }
         if (sensor.name === "temperature") {
+
           let temp = new Intl.DateTimeFormat("en-Us", {
             hour: "numeric",
             minute: "numeric",
           }).format(measure.createdAt);
+          sensor.status = measure[sensor.name].toString();
           sensor.data.push({
             date: temp,
             value: measure[sensor.name],
           });
         }
         if (sensor.name === "powerSupply") {
+
           let temp = new Intl.DateTimeFormat("en-Us", {
             hour: "numeric",
             minute: "numeric",
           }).format(measure.createdAt);
+          sensor.status = Number(measure[sensor.name]).toString();
           sensor.data.push({
             date: temp,
             value: Number(measure[sensor.name]),
           });
         }
+        
       });
     });
-    return { id:typ, name, sensors } as FurnanceVM;
+    return { id: typ, name, sensors } as FurnanceVM;
   }
 }
 export default MeasureService;
