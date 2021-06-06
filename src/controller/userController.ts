@@ -58,9 +58,8 @@ class UserController {
     if (
       Object.keys(changePerson).length == 0 ||
       changePerson.email == "" ||
-      changePerson.password == "" ||
-      changePerson.fullname == "" ||
-      changePerson.password == "" 
+      changePerson.username == "" ||
+      changePerson.fullname == "" 
     )
       throw new HttpException(422, "Unprocessable entity");
     const loginDto: LoginUserDto = {username:changePerson.username,password:changePerson.password};
