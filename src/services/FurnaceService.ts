@@ -89,7 +89,7 @@ class FurnaceService implements CRUD<Furnace | string> {
       */
     });
     const data = await Promise.all(furnaceArray)
-    return data;
+    return data as Array<FurnanceVM>;
   }
 }
 export default FurnaceService;
