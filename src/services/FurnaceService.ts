@@ -26,10 +26,9 @@ class FurnaceService implements CRUD<Furnace | string> {
     return createdFurnace as Furnace;
   }
   async putById(typ: string, resource: PutFurnaceDto): Promise<Furnace> {
-    const furnaceContext = await this.dbContext.findOne({typ:typ});
+    const furnaceContext = await this.dbContext.findOne({userId:resource.userId,typ:typ});
     if (!resource) throw new HttpException(400, "Given resources are empty");
     if (!furnaceContext) return null;
-    if(furnaceContext.userId != resource.userId) return null;
     if(furnaceContext.name !== resource.name)
     Object.assign(furnaceContext, {...furnaceContext, name: resource.name});
     await furnaceContext.save();
