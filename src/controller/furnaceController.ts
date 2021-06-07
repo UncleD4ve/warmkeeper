@@ -52,10 +52,12 @@ class FurnaceController {
       throw new HttpException(500, "Internal error");
     }
   }
-  @Put("/:id") //>>
-  async putById(@Response() res, @Request() req, @Params("id") id: string) {
+  @Put("/:typ") 
+  async putById(@Response() res, @Request() req, @Params("typ") typ: string) {
     const changeFurnace = req.body as PutFurnaceDto;
-    const temp = await this.furnaceService.putById(id, changeFurnace);
+    const updatedFurnace = await this.furnaceService.putById(typ, changeFurnace);
+    if (!updatedFurnace) throw new HttpException(404, "Not found");
+    const temp = await this.furnaceService.listByUser(changeFurnace.userId);
     if (temp) {
       res.send(temp).status(200);
     } else {
