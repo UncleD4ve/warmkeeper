@@ -29,6 +29,7 @@ class FurnaceService implements CRUD<Furnace | string> {
     const furnaceContext = await this.dbContext.findOne({typ:typ});
     if (!resource) throw new HttpException(400, "Given resources are empty");
     if (!furnaceContext) return null;
+    if(furnaceContext.userId != resource.userId) return null;
     if(furnaceContext.name !== resource.name)
     Object.assign(furnaceContext, {...furnaceContext, name: resource.name});
     await furnaceContext.save();
