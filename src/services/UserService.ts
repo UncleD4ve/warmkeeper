@@ -14,7 +14,6 @@ class UserService implements CRUD<User | string> {
     return userContext as Array<User>;
   }
   async create(resource: CreateUserDto): Promise<User | null> {
-
     if (!resource) throw new HttpException(400, "Given resources is empty");
     const found =
       (await this.dbContext.findOne({ username: resource.username })) ||
