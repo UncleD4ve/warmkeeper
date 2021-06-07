@@ -20,6 +20,8 @@ class UserService implements CRUD<User | string> {
       (await this.dbContext.findOne({ username: resource.username })) ||
       (await this.dbContext.findOne({ email: resource.email }));
     if (found) throw new HttpException(406, "Username or email is already taken");
+    if(this.validator.test(resource.password) == false) 
+      throw new HttpException(400, "Password need to contain at least 8 characters with 1 uppercase,lowercase,digit and special characters")
     const hash = await bcrypt.hash(resource.password, 10);
     const createdUser = await this.dbContext.create({
       ...resource,
