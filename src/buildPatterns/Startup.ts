@@ -76,7 +76,7 @@ class Startup {
   buildReact(pathReact : string)
   {
     this.startup.use(express.static(path.join(__dirname,pathReact)))
-    this.startup.get('/',
+    this.startup.get('/*',
     (req,res) => {
       res.sendFile(path.join(__dirname, pathReact,'index.html'))
     })
